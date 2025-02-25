@@ -1,0 +1,302 @@
+body {
+  margin: 0;
+  font-size: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #efefef;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
+}
+
+.container {
+  width: 100%;
+  margin: 2rem auto;
+  max-width: 68rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 4px;
+}
+#editor div.code {
+  background-color: #efefef;
+  padding: .25rem 0.5rem;
+  border: .1rem solid #ddd;
+  border-radius: .25rem;
+  position: relative;
+  flex: 1;
+}
+#editor div.comment {
+  margin: 1rem 0;
+  padding: 0 0.5rem;
+  border-radius: .25rem;
+  flex: 1;
+}
+
+button {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  background-color: #fff;
+  vertical-align: middle;
+  font-size: .75rem;
+  transition: all .25s;
+}
+button > * {
+  vertical-align: bottom;
+}
+button:hover {
+  background-color: #f5f5f5;
+}
+button:active {
+  background-color: #ddd;
+}
+
+.header {
+  position: sticky;
+  left: 0;
+  top: 0;
+  padding: 0.5rem;
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  background-color: #fff;
+  z-index: 10;
+  justify-content: flex-start;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+}
+.header button {
+  font-size: 1.5rem;
+  color: #666;
+  margin: 0;
+  padding: .25rem;
+  border: .1rem solid #999;
+  border-right-width: 0;
+}
+
+.header button:first-of-type {
+  border-top-left-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+}
+
+.header button:last-of-type {
+  border-top-right-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+  border-right-width: .1rem;
+}
+
+.header button:hover {
+  color: #66f;
+  fill: #66f;
+  border-color: #66f;
+}
+
+.header .logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  margin-right: 2rem;
+  background-color: #66f;
+  color: #fff;
+  padding: .5rem;
+  border-radius: .25rem;
+  cursor: default;
+  user-select: none;
+}
+
+[data-title] {
+  position: relative;
+}
+[data-title]:hover::after {
+  content: attr(data-title);
+  font-size: .75rem;
+  position: absolute;
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: .25rem .5rem;
+  border-radius: .25rem;
+  width: max-content;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.console-logs-block {
+  display: flex;
+  margin-top: .5rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-family: monospace;
+  font-size: .85rem;
+}
+
+.console-logs-actions {
+  width: 6rem;
+  color: orange;
+  padding-left: calc(0.5rem + 5px);
+}
+
+.console-logs {
+  flex: 1;
+  overflow: auto;
+  border-left: 5px solid white;
+  padding-left: 0.5rem;
+}
+
+.console-logs .table-wrapper {
+  width: 100%;
+  overflow: auto;
+}
+
+.console-logs table {
+  border: 0;
+  max-width: 100%;
+  border-spacing: 0;
+  appearance: none;
+  border-collapse: collapse;
+}
+
+.console-logs table td, .console-logs table th {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.console-logs table td:hover {
+  background-color: rgba(0, 0, 0, .025);
+}
+
+.chunk-block {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  margin: 1rem 0;
+  border-left: 5px solid white;
+  padding: 0 .5rem;
+  width: 100%;
+}
+
+.chunk-actions-sticky {
+  position: sticky;
+  top: 4rem;
+  left: 0;
+}
+
+.chunk-actions-sticky > div {
+  margin: .5rem 0;
+}
+
+.chunk-actions {
+  width: 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: .5rem;
+}
+
+.chunk-block-active {
+  border-left-color: rgba(0, 0, 0, 0.1);
+}
+
+.chunk-actions button {
+  font-size: 1rem;
+  padding: 0;
+  display: flex;
+  gap: .25rem;
+  font-size: .75rem;
+}
+
+.chunk-actions button:hover {
+  background-color: rgba(255,255,255,0);
+}
+
+.chunk-status-done .chunk-actions {
+  color: blue;
+}
+
+.chunk-status-run .chunk-actions {
+  color: green;
+}
+
+.chunk-block-active.chunk-status-done {
+  border-color: blue;
+}
+
+.chunk-block-active.chunk-status-run {
+  border-color: green;
+}
+
+.console-type-error,
+.btn-delete {
+  color: red;
+}
+
+.flex {
+  display: flex;
+  gap: .25rem;
+}
+
+button:disabled {
+  opacity: .25;
+}
+
+.console-logs {
+  background-color: rgba(0,0,25,.025);
+  font-family: "DejaVu Sans Mono", "Courier New", Courier, monospace;
+  font-size: 1rem;
+  line-height: 1.2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+  border: 0;
+  margin: 0 0.5rem;
+  border-radius: 4px;
+  position: relative;
+}
+
+.files-list-select {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #efefef;
+  padding: 0.5rem;
+  border-radius: 4px;
+  justify-content: stretch;
+}
+
+.files-list-select select {
+  font-size: 1.25rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding: 0 .5rem;
+  border: .1rem solid #999;
+  border-radius: .25rem;
+  width: 100%;
+}
+
+.files-list-select > label {
+  display: block;
+  width: calc(5px + 5rem);
+}
+
+.files-list-select > div {
+  flex: 1;
+}
+
+.files-list-select button {
+  font-size: 2rem;
+  background-color: transparent;
+  padding: 0;
+}
+
+.files-list-select button:hover {
+  color: blue;
+}

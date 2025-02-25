@@ -1,0 +1,51 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "electron.js",
+  "build": {
+    "appId": "com.ml.jsnotes",
+    "productName": "JSNotes",
+    "directories": {
+      "output": "dist_electron"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "electron:dev": "electron .",
+    "build": "vite build && electron-builder",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mdxeditor/editor": "^3.21.3",
+    "@mlc-ai/web-llm": "^0.2.78",
+    "@wllama/wllama": "^2.2.0",
+    "chart.js": "^4.4.7",
+    "chartist": "^1.3.0",
+    "electron": "^34.2.0",
+    "electron-builder": "^25.1.8",
+    "electron-is-dev": "^3.0.1",
+    "react": "^19.0.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
+    "react-select": "^5.10.0",
+    "react-simple-code-editor": "^0.14.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/prismjs": "^1.26.5",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "globals": "^15.14.0",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.22.0",
+    "vite": "^6.1.0"
+  }
+}
