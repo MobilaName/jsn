@@ -11,6 +11,7 @@ import 'chartist/dist/index.css';
 import { ConsoleLogType, FileType, Executed } from './types.d';
 import Header from './layout/Header';
 import NoteEditor from './layout/Editor';
+import { removeExtension } from './utils/files';
 
 let executor = new ChunkedExecutor();
 
@@ -40,15 +41,48 @@ console.log(response);
 const CodeArray = new JavaScriptCode(jsCode).getArray();
 
 function App() {
-  const [files, setFiles] = useState([]);
-  const [dir, setDir] = useState([]);
+  const localStorageDir = localStorage.getItem('dir') || '';
+  const localStorageFile:string = localStorage.getItem('file') || '';
+  const [dir, setDir] = useState<string>(localStorageDir);
+  const [files, setFiles] = useState([] as FileType[]);
   const [code, setCode] = useState(CodeArray);
+  const [currentFile, setCurrentFile] = useState<string>(localStorageFile);
   const [currentChunk, setCurrentChunk] = useState(0);
   const [logs, setLogs] = useState<ConsoleLogType[]>([]);
   const [executing, setExecuting] = useState<boolean>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const [activeBlock, setActiveBlock] = useState(NaN);
   const [executed, setExecuted] = useState<Executed>({});
+
+  useEffect(() => {
+    if (dir) {
+      (async function(dir:string) {
+        // @ts-expect-error
+        const [_dir, fileList]:[string, FileType[]] = await window.electronAPI.openFolder(dir);
+        setDir(_dir);
+        setFiles(fileList);
+      })(dir);
+    }
+
+    if (currentFile) {
+      (async function(currentFile:string) {
+        setLoadingFile(true);
+        // @ts-expect-error
+        const fileContent = await window.electronAPI.openFile(dir, currentFile);
+        setCode(new JavaScriptCode(fileContent).getArray());
+        setLoadingFile(false);
+        executor = new ChunkedExecutor();
+      })(currentFile);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('dir', dir);
+  }, [dir]);
+
+  useEffect(() => {
+    localStorage.setItem('file', currentFile);
+  }, [currentFile]);
 
   useEffect(() => {
     if (!Number.isNaN(activeBlock))
@@ -67,10 +101,12 @@ function App() {
     // @ts-expect-error
     if (window.electronAPI) {
       // @ts-expect-error
-      const [dir, fileList] = await window.electronAPI.selectFolder();
-      console.log({fileList, dir})
-      setFiles(fileList);
-      setDir(dir);
+      const [dir, fileList]:[string, FileType[]] = await window.electronAPI.selectFolder();
+
+      if (dir) {
+        setDir(dir);
+        setFiles(fileList);
+      }
     } else {
       console.error("Electron API not available");
     }
@@ -156,13 +192,15 @@ function App() {
           <label htmlFor="fileslist">File:</label>
           <div>
             <Select
-              options={files.map((file:FileType) => ({label: file.name, value: file.name}))}
+              options={files.map((file:FileType) => ({label: removeExtension(file.name), value: file.name}))}
               placeholder="Select a file"
+              value={{label: removeExtension(currentFile), value: currentFile}}
               onChange={(file) => {
                 setLoadingFile(true);
                 setTimeout(async () => {
                   // @ts-expect-error
                   const fileContent = await window.electronAPI.openFile(dir, file?.value);
+                  setCurrentFile(file?.value || '');
                   setCode(new JavaScriptCode(fileContent).getArray());
                   setLogs([]);
                   setCurrentChunk(NaN);

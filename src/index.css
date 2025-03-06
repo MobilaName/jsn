@@ -208,16 +208,31 @@ button:active {
   border-left-color: rgba(0, 0, 0, 0.1);
 }
 
-.chunk-actions button {
+.chunk-block-active .code-actions {
+  visibility: visible;
+}
+
+.code-actions {
+  position: sticky;
+  z-index: 2;
+  left: 100%;
+  top: 4rem;
+  display: flex;
+  width: fit-content;
+  visibility: hidden;
+  gap: .25rem;
+  padding: 0.25rem;
+  background-color: #efefef;
+  margin-bottom: -1.25rem;
+}
+
+.code-actions button {
   font-size: 1rem;
   padding: 0;
   display: flex;
   gap: .25rem;
   font-size: .75rem;
-}
-
-.chunk-actions button:hover {
-  background-color: rgba(255,255,255,0);
+  background-color: #efefef;
 }
 
 .chunk-status-done .chunk-actions {

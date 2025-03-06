@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, session } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import isDev from 'electron-is-dev';
@@ -16,6 +16,12 @@ function createWindow() {
       preload: path.join(app.getAppPath(), 'preload.js'), // Use preload for IPC
     },
   });
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    details.responseHeaders['Cross-Origin-Embedder-Policy'] = ['require-corp']
+    details.responseHeaders['Cross-Origin-Opener-Policy'] = ['same-origin']
+    callback({ responseHeaders: details.responseHeaders })
+  })
 
   const startURL = isDev
     ? 'http://localhost:5173'
@@ -36,6 +42,30 @@ ipcMain.handle('select-folder', async () => {
 
   const folderPath = result.filePaths[0];
 
+  function traverseFolder(folderPath) {
+    const files = fs.readdirSync(folderPath);
+    return files.map((file) => {
+      const filePath = path.join(folderPath, file);
+      const stats = fs.statSync(filePath);
+      const isFolder = stats.isDirectory();
+      const _file = {
+        name: file,
+        type: isFolder ? 'folder' : 'file',
+      };
+
+      // if (isFolder) {
+      //   // If folder, traverse it and add children
+      //   _file.children = traverseFolder(filePath);
+      // }
+      return _file;
+    }).filter(f => f.name.endsWith('.js') && f.type === 'file');
+  }
+
+  const filesAndFolders = traverseFolder(folderPath);
+  return [folderPath, filesAndFolders];
+});
+
+ipcMain.handle('open-folder', async (_ev, folderPath) => {
   function traverseFolder(folderPath) {
     const files = fs.readdirSync(folderPath);
     return files.map((file) => {

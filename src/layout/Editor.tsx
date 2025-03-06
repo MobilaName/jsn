@@ -61,6 +61,13 @@ const NoteEditor = ({
                   <div className={`chunk-status`}>
                     In: {codeIdx}
                   </div>
+                </div>
+              </div>
+              <div
+                className='code'
+                data-codeblock={codeIdx}
+              >
+                <div className='code-actions'>
                   <div>
                     <button
                       data-title="Run Block"
@@ -121,11 +128,6 @@ const NoteEditor = ({
                     </button>
                   </div>
                 </div>
-              </div>
-              <div
-                className='code'
-                data-codeblock={codeIdx}
-              >
                 <Editor
                   value={item.content}
                   highlight={code => highlight(code, languages.js, 'javascript')}
