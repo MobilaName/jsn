@@ -12,14 +12,15 @@ interface HeaderProps {
 const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleSaveFile }: HeaderProps) => {
 
   const handleKeyPress = (event: KeyboardEvent) => {
+    const key = event.key.toLowerCase();
     if (event.shiftKey && event.ctrlKey) {
-      if (event.key === 'o') {
+      if (key === 'o') {
         handleSelectFolder();
-      } else if (event.key === 's') {
-        // handleSave();
-      } else if (event.key === 'r') {
+      } else if (key === 's') {
+        (() => handleSaveFile())();
+      } else if (key === 'r') {
         runAllBlocks();
-      } else if (event.key === 'b') {
+      } else if (key === 'b') {
         addBlock()();
       }
     }
@@ -30,7 +31,7 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleS
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, []);
+  }, [handleSaveFile]);
 
   return (
     <div className="header">

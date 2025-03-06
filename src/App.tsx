@@ -62,17 +62,17 @@ function App() {
         setDir(_dir);
         setFiles(fileList);
       })(dir);
-    }
 
-    if (currentFile) {
-      (async function(currentFile:string) {
-        setLoadingFile(true);
-        // @ts-expect-error
-        const fileContent = await window.electronAPI.openFile(dir, currentFile);
-        setCode(new JavaScriptCode(fileContent).getArray());
-        setLoadingFile(false);
-        executor = new ChunkedExecutor();
-      })(currentFile);
+      if (currentFile) {
+        (async function(currentFile:string) {
+          setLoadingFile(true);
+          // @ts-expect-error
+          const fileContent = await window.electronAPI.openFile(dir, currentFile);
+          setCode(new JavaScriptCode(fileContent).getArray());
+          setLoadingFile(false);
+          executor = new ChunkedExecutor();
+        })(currentFile);
+      }
     }
   }, []);
 
@@ -120,7 +120,7 @@ function App() {
     } else {
       console.error("Electron API not available");
     }
-  };
+  }
 
   const setRunBlockEvent = (event: KeyboardEvent<HTMLBodyElement>) => {
     if (event.ctrlKey && event.key === 'Enter') {
