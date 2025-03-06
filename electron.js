@@ -96,6 +96,17 @@ ipcMain.handle('open-file', async (_ev, folderPath, fileName) => {
   return fileData;
 });
 
+ipcMain.handle('save-file', async (_ev, folderPath, fileName, fileData) => {
+  const filePath = path.join(folderPath, fileName);
+  try {
+    fs.writeFileSync(filePath, fileData);
+    return true;
+  } catch (error) {
+    console.error('Error saving file:', error);
+    return false;
+  }
+});
+
 app.on('ready', createWindow);
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();

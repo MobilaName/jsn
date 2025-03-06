@@ -98,3 +98,10 @@ export const consoleFromArray = (self: ChunkedExecutor): void => {
   })
 }
 
+export const mergeCode = function(codeArray: SplittedCode[]) {
+  return codeArray.map((item, idx) => 
+    item.type === 'comment' 
+      ? `\n/* ${item.content} */\n` 
+      : `\n// ~~codeblock ${idx}\n\n${item.content}`
+  ).join('\n');
+}

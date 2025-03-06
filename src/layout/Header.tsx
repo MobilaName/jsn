@@ -7,8 +7,9 @@ interface HeaderProps {
   handleSelectFolder: () => void;
   runAllBlocks: () => void;
   addBlock: () => () => void;
+  handleSaveFile: () => void;
 }
-const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock }: HeaderProps) => {
+const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleSaveFile }: HeaderProps) => {
 
   const handleKeyPress = (event: KeyboardEvent) => {
     if (event.shiftKey && event.ctrlKey) {
@@ -41,7 +42,7 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock }: Heade
         <button disabled={executing} onClick={handleSelectFolder} data-title="Open Folder (Shift + Ctrl + O)">
           <AiTwotoneFolderOpen />
         </button>
-        <button disabled={executing} data-title="Save (Shift + Ctrl + S)">
+        <button disabled={executing} onClick={handleSaveFile} data-title="Save (Shift + Ctrl + S)">
           <AiTwotoneSave />
         </button>
         <button

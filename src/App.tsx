@@ -2,7 +2,7 @@ import { KeyboardEvent, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { AiOutlineFileAdd } from 'react-icons/ai';
 import { JavaScriptCode } from './utils/code';
-import { ChunkedExecutor } from './utils/executor';
+import { ChunkedExecutor, mergeCode } from './utils/executor';
 import './utils/utilityFunctions';
 
 import '@mdxeditor/editor/style.css'
@@ -45,7 +45,7 @@ function App() {
   const localStorageFile:string = localStorage.getItem('file') || '';
   const [dir, setDir] = useState<string>(localStorageDir);
   const [files, setFiles] = useState([] as FileType[]);
-  const [code, setCode] = useState(CodeArray);
+  const [code, setCode] = useState<SplittedCode[]>(CodeArray);
   const [currentFile, setCurrentFile] = useState<string>(localStorageFile);
   const [currentChunk, setCurrentChunk] = useState(0);
   const [logs, setLogs] = useState<ConsoleLogType[]>([]);
@@ -107,6 +107,16 @@ function App() {
         setDir(dir);
         setFiles(fileList);
       }
+    } else {
+      console.error("Electron API not available");
+    }
+  };
+
+  const handleSaveFile = async () => {
+    // @ts-expect-error
+    if (window.electronAPI) {
+      // @ts-expect-error
+      const result = await window.electronAPI.saveFile(dir, currentFile, mergeCode(code));
     } else {
       console.error("Electron API not available");
     }
@@ -182,6 +192,7 @@ function App() {
     <Header
       executing={executing}
       handleSelectFolder={handleSelectFolder}
+      handleSaveFile={handleSaveFile}
       runAllBlocks={runAllBlocks}
       addBlock={addBlock}
     />
