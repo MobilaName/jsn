@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { AiTwotoneCode, AiTwotoneControl, AiTwotoneFolderOpen, AiTwotonePlayCircle, AiTwotonePropertySafety, AiTwotoneQuestionCircle, AiTwotoneSave } from 'react-icons/ai';
 import { TbArrowAutofitDown } from 'react-icons/tb';
+import { cmdOrCtrl } from '../utils/system';
 
 interface HeaderProps {
   executing: boolean;
@@ -13,7 +14,7 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleS
 
   const handleKeyPress = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
-    if (event.shiftKey && event.ctrlKey) {
+    if (event[cmdOrCtrl]) {
       if (key === 'o') {
         handleSelectFolder();
       } else if (key === 's') {

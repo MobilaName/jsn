@@ -114,7 +114,7 @@ function App() {
 
   const handleSaveFile = async () => {
     // @ts-expect-error
-    if (window.electronAPI) {
+    if (window.electronAPI && dir && currentFile) {
       // @ts-expect-error
       const result = await window.electronAPI.saveFile(dir, currentFile, mergeCode(code));
     } else {

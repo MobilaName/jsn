@@ -1,4 +1,5 @@
 import { consoleEvents, CodeChunk, ConsoleEvent, ExecutionContext, LogArgsType, ConsoleLogType } from "../types.d";
+import { delay, wllama } from "./utilityFunctions";
 
 export interface ExecutorConstructor {
   new(): Executor;
@@ -27,7 +28,12 @@ export class ChunkedExecutor implements Executor {
   currentChunkIdx: number;
 
   constructor() {
-    this.context = {};
+    this.context = {
+      wllama,
+      delay
+    };
+
+    ['document', 'location'].forEach((key:string) => this.context[key] = `undefined`);
     this.consoleLogs = [];
     this.originalConsoleLog = console.log;
     this.currentChunkIdx = NaN;

@@ -26,7 +26,6 @@ export class JavaScriptCode {
     baseCodeArray?.forEach((item: SplittedCode): void => {
       if (item.type === 'code') {
         const splittedArray = item.content.split(/\/\/\s*~~codeblock\s*\d+(\n?)/gi).map(i => i.trim()).filter(i => i);
-        console.log({item, splittedArray})
         splittedArray.forEach((subItem: string) => {
           resultArray.push({
             type: 'code',
