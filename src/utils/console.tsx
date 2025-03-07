@@ -12,6 +12,7 @@ import {
   LineElement,
   RadialLinearScale,
 } from 'chart.js';
+import { ErrorBoundary } from "react-error-boundary";
 import { Bar, Doughnut, Line, Pie, Radar } from 'react-chartjs-2';
 import { ChartType, ConsoleEvent, ConsoleLogType } from "../types.d";
 import { JSX } from "react";
@@ -54,7 +55,9 @@ export function consoleToDivs (consoleLogs: ConsoleLogType[]): JSX.Element[] {
       const ChartComponent = Charts[args[0] as ChartType] || Charts.bar;
 
       return <div key={itemKey} className="chart-wrapper">
-        <ChartComponent options={args[2] as any} data={args[1] as any} />
+        <ErrorBoundary fallback={<></>}>
+          <ChartComponent options={args[2] as any} data={args[1] as any} />
+        </ErrorBoundary>
       </div>;
     }
 

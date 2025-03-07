@@ -79,7 +79,7 @@ export class ChunkedExecutor implements Executor {
   getConsoleLogs(): ConsoleLogType[] { return this.consoleLogs; }
   resetConsoleLogs(): void { this.consoleLogs = []; }
   resetConsole(): void { consoleFromArray(this); }
-  clearContext(): void { console.log(2, this.context);this.context = {}; }
+  clearContext(): void { this.context = {}; }
 }
 
 export const consoleToArray = (self: ChunkedExecutor, cidx: number, updateLogs: UpdateLogsFunction): void => {

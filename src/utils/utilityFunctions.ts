@@ -7,17 +7,15 @@ import { Wllama } from '@wllama/wllama';
 // window.MLCEngine = MLCEngine;
 
 const CONFIG_PATHS = {
-  'single-thread/wllama.wasm': '../node_modules/@wllama/wllama/esm/single-thread/wllama.wasm',
-  'multi-thread/wllama.wasm' : '../node_modules/@wllama/wllama/esm/multi-thread/wllama.wasm',
+  'single-thread/wllama.wasm': '/esm/single-thread/wllama.wasm',
+  'multi-thread/wllama.wasm' : '/esm/multi-thread/wllama.wasm',
 };
-
 
 export const delay = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const progressCallback =  ({ loaded, total } : { loaded: number; total: number }) => {
   const progressPercentage = Math.round((loaded / total) * 100);
-  console.clear();
-  console.log(`Downloading... ${progressPercentage}%`);
+  console.info(`Downloading... ${progressPercentage}%`);
 };
 
 function convertHuggingFaceURLToSettings(url: string) {
@@ -38,6 +36,8 @@ function convertHuggingFaceURLToSettings(url: string) {
 }
 
 export const wllama = async (modelUrl?: string) => {
+  console.warn = () => {};
+  
   const wll = new Wllama(CONFIG_PATHS);
   let model = [
     'Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF',
@@ -59,8 +59,8 @@ export const wllama = async (modelUrl?: string) => {
 
 export const agentChat = async (wll: Wllama, chat: any[]) => {
   return wll.createCompletion(
-    chat.map(c=>`<|${c.role}|>${c.content}<|endoftext|>`).join('\n')
-    + '<|assistant|>', {
+    chat.map(c=>`<|im_start|>${c.role}\n${c.content}<|im_end|>`).join('\n').replace(/\s{2,}/g, ' ').trim()
+  + '<|im_start|>assistant\n', {
       useCache: true,
       // @ts-expect-error
       nThreads: -1, // auto

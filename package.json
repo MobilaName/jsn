@@ -7,6 +7,15 @@
   "build": {
     "appId": "com.ml.jsnotes",
     "productName": "JSNotes",
+    "win": {
+      "icon": "public/icon.ico"
+    },
+    "mac": {
+      "icon": "public/icon.icns"
+    },
+    "linux": {
+      "icon": "public/icon.png"
+    },
     "directories": {
       "output": "dist_electron"
     }
@@ -30,6 +39,7 @@
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
+    "react-error-boundary": "^5.0.0",
     "react-icons": "^5.4.0",
     "react-select": "^5.10.0",
     "react-simple-code-editor": "^0.14.1"

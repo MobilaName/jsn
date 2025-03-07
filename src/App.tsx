@@ -247,11 +247,11 @@ function App() {
       
       {files.length > 0 && (
         <div className='files-list-select'>
-          <label htmlFor="fileslist">File:</label>
+          <label htmlFor="fileslist">Notes:</label>
           <div>
             <Select
               options={files.map((file:FileType) => ({label: removeExtension(file.name), value: file.name}))}
-              placeholder="Select a file"
+              placeholder="Select a Note"
               value={{label: removeExtension(currentFile), value: currentFile}}
               onChange={(file) => {
                 setLoadingFile(true);
@@ -270,7 +270,7 @@ function App() {
               }}
             />
           </div>
-          <button data-title="New File" onClick={() => setNewFileNameModal(true)}><AiOutlineFileAdd /></button>
+          <button data-title="New Note" onClick={() => setNewFileNameModal(true)} style={{fontSize: '1.5rem'}}><AiOutlineFileAdd /></button>
         </div>
       )}
       

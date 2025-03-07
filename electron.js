@@ -7,9 +7,13 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
+    icon: path.join('./public/icon.png'),
+    title: 'JSNotes',
     width: 800,
     height: 600,
     titleBarStyle: 'hidden',
+    frame: false,
+    toolbar: false,
     webPreferences: {
       nodeIntegration: false, // More secure
       contextIsolation: true,
@@ -19,6 +23,10 @@ function createWindow() {
   });
 
   mainWindow.maximize();
+
+  if (process.platform === 'darwin') {
+    app.dock.setIcon(path.join('./public/icon.png'));
+  }
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     details.responseHeaders['Cross-Origin-Embedder-Policy'] = ['require-corp']
