@@ -47,15 +47,15 @@ const NoteEditor = ({
 
   const handleKeyPress = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
+    const aBlock = Math.max(activeBlock, 0);
     if (event.shiftKey && event.ctrlKey) {
-      if (key === 'arrowup') {
+      if (key === ',') {
         const selectorPrefix = `[data-idx="${activeBlock - 1}"]`;
-        if (activeBlock > 0) {
+        if (aBlock > 0) {
           setActiveBlock(activeBlock - 1);
           let block = document.querySelector(`${selectorPrefix} textarea`);
 
           if (!block) {
-            console.log(`${selectorPrefix} div[aria-label="editable markdown"]`)
             block = document.querySelector(`${selectorPrefix} div[aria-label="editable markdown"]`)
           }
           
@@ -63,20 +63,23 @@ const NoteEditor = ({
           block?.focus();
         }
       } 
-      if (key === 'arrowdown') {
+      if (key === '.') {
         const selectorPrefix = `[data-idx="${activeBlock + 1}"]`;
-        if (activeBlock < code.length) {
+        if (aBlock <= code.length - 2) {
           setActiveBlock(activeBlock + 1);
           let block = document.querySelector(`${selectorPrefix} textarea`);
 
           if (!block) {
-            console.log(`${selectorPrefix} div[aria-label="editable markdown"]`)
             block = document.querySelector(`${selectorPrefix} div[aria-label="editable markdown"]`)
           }
           
           // @ts-ignore
           block?.focus();
         }
+      }
+      if (key === 'enter' && activeBlock) {
+        document.getElementById(`run-btn-${activeBlock}`)?.click();
+        event.preventDefault();
       }
       event.preventDefault();
     }
@@ -88,7 +91,8 @@ const NoteEditor = ({
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [activeBlock])
+  }, [activeBlock, code.length]);
+
   return (
     <div id="editor">
     {code.map((item:SplittedCode, index: number) => {

@@ -243,6 +243,13 @@ button:active {
   position: relative;
 }
 
+.add-variable-btn {
+  font-size: 1rem;
+  display: flex;
+  gap: .5rem;
+  padding: 0.5rem;
+}
+
 .chunk-status-done .chunk-actions {
   color: blue;
 }
@@ -267,6 +274,11 @@ button:active {
 .flex {
   display: flex;
   gap: .25rem;
+}
+
+.flex-spread {
+  align-items: center;
+  justify-content: space-between;
 }
 
 button:disabled {
@@ -379,13 +391,23 @@ dialog[open]#vars-and-secrets-modal > form {
   background-color: #fff;
   border-radius: 4px;
   padding: .5rem 1rem;
-  display: block;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
   box-shadow: 0 0 1rem rgba(0,0,0,.25);
   width: 30rem;
   max-width: 50%;
+}
+
+.vars-vars {
+  flex: 1;
+  overflow: auto;
+  padding-top: 1rem;
+}
+
+.vars-btns {
+  padding: .5rem 0;
 }
 
 dialog[open] > * > label {
@@ -408,7 +430,8 @@ dialog[open]#new-file-name-modal > * > input {
   border-right: 0;
 }
 
-dialog[open] > * > button[type="submit"] {
+dialog[open] button[type="submit"],
+dialog[open] button[type="reset"] {
   padding: .5rem;
   border: .1rem solid #999;
   border-radius: .25rem;
@@ -457,3 +480,5 @@ dialog[open]#vars-and-secrets-modal ul > li input {
 .secret-toggle {
   font-size: 1rem;
 }
+
+

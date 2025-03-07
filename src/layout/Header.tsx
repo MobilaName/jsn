@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AiTwotoneCode, AiTwotoneControl, AiTwotoneFolderOpen, AiTwotonePlayCircle, AiTwotonePropertySafety, AiTwotoneQuestionCircle, AiTwotoneSave } from 'react-icons/ai';
+import { AiTwotoneCode, AiTwotoneControl, AiTwotoneFolderOpen, AiTwotoneLock, AiTwotonePlayCircle, AiTwotoneQuestionCircle, AiTwotoneSave } from 'react-icons/ai';
 import { TbArrowAutofitDown } from 'react-icons/tb';
 import { cmdOrCtrl, cmdOrCtrlIcon } from '../utils/system';
 
@@ -71,7 +71,7 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleS
       </div>
       <div className="header-buttons">
         <button disabled={executing} data-title="Globals &amp; Secrets" onClick={handleShowSecrets}>
-          <AiTwotonePropertySafety />
+          <AiTwotoneLock />
         </button>
         <button disabled={executing} data-title="Settings">
           <AiTwotoneControl />

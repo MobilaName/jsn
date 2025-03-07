@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { AiOutlineFileAdd } from 'react-icons/ai';
 import { JavaScriptCode } from './utils/code';
@@ -88,15 +88,6 @@ function App() {
     localStorage.setItem('file', currentFile);
   }, [currentFile]);
 
-  useEffect(() => {
-    if (!Number.isNaN(activeBlock))
-      document.body.addEventListener('keypress', setRunBlockEvent as any);
-
-    return () => {
-      document.body.removeEventListener('keypress', setRunBlockEvent as any);
-    }
-  }, [activeBlock]);
-
   const updateExecuted = (setValues:Executed) => {
     setExecuted({...executed, ...setValues});
   };
@@ -152,12 +143,6 @@ function App() {
     }
 
     setNewFileNameModal(false);
-  }
-
-  const setRunBlockEvent = (event: KeyboardEvent<HTMLBodyElement>) => {
-    if (event.ctrlKey && event.key === 'Enter') {
-      document.getElementById(`run-btn-${activeBlock}`)?.click();
-    }
   }
 
   const convertToText = (index: number) => {
