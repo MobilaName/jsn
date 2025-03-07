@@ -17,12 +17,16 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleS
     if (event[cmdOrCtrl]) {
       if (key === 'o') {
         handleSelectFolder();
+        event.preventDefault();
       } else if (key === 's') {
         (() => handleSaveFile())();
+        event.preventDefault();
       } else if (key === 'r') {
         runAllBlocks();
+        event.preventDefault();
       } else if (key === 'b') {
         addBlock()();
+        event.preventDefault();
       }
     }
   };
