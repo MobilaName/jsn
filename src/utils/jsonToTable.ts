@@ -3,11 +3,21 @@ export const jsonToTableHtml = (data: any[]) => {
   // Helper function to handle nested objects and arrays
   const createTableRows = (obj: any) => {
     let rows = '';
+
+    if (!obj) {
+      return rows;
+    }
+
+    if (typeof obj !== 'object') {
+      return `
+        ${obj}
+      `;
+    }
     
     // Loop through all keys in the object
     Object.keys(obj).forEach((key:string|number) => {
       const value = obj[key];
-      
+
       // If the value is an object, we recurse and create a nested table
       if (typeof value === 'object' && !Array.isArray(value)) {
         rows += `

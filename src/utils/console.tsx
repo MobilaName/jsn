@@ -65,7 +65,7 @@ export function consoleToDivs (consoleLogs: ConsoleLogType[]): JSX.Element[] {
     return <pre key={itemKey} className={`console-type-${type}`}>
       {args.map((a) => {
         try {
-          return typeof a === 'object' ? JSON.stringify(a, undefined, 100) : a;
+          return typeof a === 'object' ? JSON.stringify(a, undefined, 2) : a;
         } catch {
           return String(a);
         }
