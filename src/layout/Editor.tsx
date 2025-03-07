@@ -12,10 +12,10 @@ import { TbArrowAutofitDown, TbArrowAutofitUp, TbTableDown, TbTableImport } from
 import { highlight, languages } from 'prismjs';
 import { consoleToDivs } from '../utils/console';
 import { ConsoleLogType, Executed } from "../types.d";
+import { useEffect } from 'react';
 
 const NoteEditor = ({
   code,
-  addBlock,
   logs,
   activeBlock,
   setActiveBlock,
@@ -33,7 +33,6 @@ const NoteEditor = ({
   logs: ConsoleLogType[],
   activeBlock: number,
   setActiveBlock: Function,
-  addBlock: Function,
   deleteBlock: Function,
   saveCodeToIndex: Function,
   runBlock: Function,
@@ -45,6 +44,51 @@ const NoteEditor = ({
   addDirectionBlock: Function
 }) => {
   let codeIdx = 0;
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    const key = event.key.toLowerCase();
+    if (event.shiftKey && event.ctrlKey) {
+      if (key === 'arrowup') {
+        const selectorPrefix = `[data-idx="${activeBlock - 1}"]`;
+        if (activeBlock > 0) {
+          setActiveBlock(activeBlock - 1);
+          let block = document.querySelector(`${selectorPrefix} textarea`);
+
+          if (!block) {
+            console.log(`${selectorPrefix} div[aria-label="editable markdown"]`)
+            block = document.querySelector(`${selectorPrefix} div[aria-label="editable markdown"]`)
+          }
+          
+          // @ts-ignore
+          block?.focus();
+        }
+      } 
+      if (key === 'arrowdown') {
+        const selectorPrefix = `[data-idx="${activeBlock + 1}"]`;
+        if (activeBlock < code.length) {
+          setActiveBlock(activeBlock + 1);
+          let block = document.querySelector(`${selectorPrefix} textarea`);
+
+          if (!block) {
+            console.log(`${selectorPrefix} div[aria-label="editable markdown"]`)
+            block = document.querySelector(`${selectorPrefix} div[aria-label="editable markdown"]`)
+          }
+          
+          // @ts-ignore
+          block?.focus();
+        }
+      }
+      event.preventDefault();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [activeBlock])
   return (
     <div id="editor">
     {code.map((item:SplittedCode, index: number) => {
@@ -54,6 +98,7 @@ const NoteEditor = ({
         const filteredLogs = logs.filter(log => log.chunkIdx === codeIdx - 1);
         return (
           <div
+            data-idx={index}
             key={item.uuid}
             onClick={({ target }: any) => {
               if (target?.nodeName !== 'BUTTON') {
@@ -161,6 +206,7 @@ const NoteEditor = ({
 
       return (
         <div
+          data-idx={index}
           key={item.uuid}
           onClick={() => setActiveBlock(index)}
           className={`md-editor chunk-block${activeBlock === index ? ' chunk-block-active' : ''}`}

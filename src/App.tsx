@@ -297,7 +297,6 @@ function App() {
         executing={executing}
         runBlock={runBlock}
         executed={executed}
-        addBlock={addBlock}
         deleteBlock={deleteBlock}
         saveCodeToIndex={saveCodeToIndex}
         convertToText={convertToText}
