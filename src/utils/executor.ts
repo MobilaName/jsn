@@ -1,5 +1,5 @@
-import { consoleEvents, CodeChunk, ConsoleEvent, ExecutionContext, LogArgsType, ConsoleLogType } from "../types.d";
-import { delay, wllama } from "./utilityFunctions";
+import { consoleEvents, CodeChunk, ConsoleEvent, ExecutionContext, LogArgsType, ConsoleLogType, VarsAndSecretsType } from "../types.d";
+import { agentChat, delay, wllama } from "./utilityFunctions";
 
 export interface ExecutorConstructor {
   new(): Executor;
@@ -29,8 +29,9 @@ export class ChunkedExecutor implements Executor {
 
   constructor() {
     this.context = {
-      wllama,
-      delay
+      ai: wllama,
+      delay,
+      aiChat: agentChat,
     };
 
     ['document', 'location'].forEach((key:string) => this.context[key] = `undefined`);
@@ -42,6 +43,16 @@ export class ChunkedExecutor implements Executor {
   async executeChunk(chunk: CodeChunk, cidx: number, updateLogs: UpdateLogsFunction = () => {}): Promise<ConsoleLogType[]> {
     try {
       this.consoleLogs = this.consoleLogs.filter(l => l.chunkIdx !== cidx);
+      const storedVars:VarsAndSecretsType[] = JSON.parse(localStorage.getItem('varsAndSecrets') || '[]');
+      const formattedVars = storedVars.map((varAndSecret:VarsAndSecretsType) => (
+        { ...varAndSecret, value: varAndSecret.type === 'secret' ? atob(varAndSecret.value) : varAndSecret.value }
+      ));
+      this.context['vars'] = {};
+      this.context['secrets'] = {};
+
+      formattedVars.forEach((varAndSecret:VarsAndSecretsType) => {
+        this.context[varAndSecret.type + 's'][varAndSecret.name] = varAndSecret.value;
+      });
 
       consoleToArray(this, cidx, updateLogs);
       this.currentChunkIdx = cidx;

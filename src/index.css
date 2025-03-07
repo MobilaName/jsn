@@ -61,7 +61,7 @@ button:active {
   position: sticky;
   left: 0;
   top: 0;
-  padding: 0.5rem;
+  padding: 2rem .5rem .5rem;
   display: flex;
   gap: .5rem;
   align-items: center;
@@ -208,15 +208,17 @@ button:active {
   border-left-color: rgba(0, 0, 0, 0.1);
 }
 
-.chunk-block-active .code-actions {
+.chunk-block-active .code-actions,
+.chunk-block-active .md-actions {
   visibility: visible;
 }
 
-.code-actions {
+.code-actions,
+.md-actions {
   position: sticky;
   z-index: 2;
   left: 100%;
-  top: 4rem;
+  top: 5rem;
   display: flex;
   width: fit-content;
   visibility: hidden;
@@ -224,15 +226,21 @@ button:active {
   padding: 0.25rem;
   background-color: #efefef;
   margin-bottom: -1.25rem;
+  border-radius: 4px;
 }
 
-.code-actions button {
+.code-actions button,
+.md-actions button {
   font-size: 1rem;
   padding: 0;
   display: flex;
   gap: .25rem;
   font-size: .75rem;
   background-color: #efefef;
+}
+
+.md-editor {
+  position: relative;
 }
 
 .chunk-status-done .chunk-actions {
@@ -278,6 +286,28 @@ button:disabled {
   position: relative;
 }
 
+.console-type-log,
+.console-type-warn,
+.console-type-error,
+.console-type-info,
+.console-type-dir {
+  white-space: break-spaces;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.console-type-log::before,
+.console-type-warn::before,
+.console-type-error::before,
+.console-type-info::before,
+.console-type-dir::before {
+  display: block;
+  content: '$';
+  margin-left: -1.5rem;
+  position: absolute;
+  color: #aaa;
+}
+
 .files-list-select {
   display: flex;
   align-items: center;
@@ -314,4 +344,116 @@ button:disabled {
 
 .files-list-select button:hover {
   color: blue;
+}
+
+dialog[open] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+dialog[open]#new-file-name-modal > form {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: .5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 1rem rgba(0,0,0,.25);
+}
+
+dialog[open]#vars-and-secrets-modal {
+  justify-content: flex-end;
+  align-items: stretch;
+}
+
+dialog[open]#vars-and-secrets-modal > form {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: .5rem 1rem;
+  display: block;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 1rem rgba(0,0,0,.25);
+  width: 30rem;
+  max-width: 50%;
+}
+
+dialog[open] > * > label {
+  font-weight: bold;
+  margin-bottom: .5rem;
+}
+
+dialog[open] > * > input {
+  padding: .5rem;
+  border: .1rem solid #999;
+  border-radius: .25rem;
+  width: 25rem;
+  font-size: 1rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+dialog[open]#new-file-name-modal > * > input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+
+dialog[open] > * > button[type="submit"] {
+  padding: .5rem;
+  border: .1rem solid #999;
+  border-radius: .25rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+dialog[open]#new-file-name-modal > * > button[type="submit"] {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+dialog[open] > * > button[type="reset"]  {
+  padding: .5rem;
+  background-color: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #999;
+}
+
+dialog[open] > * > button[type="reset"]:hover {
+  color: #000;
+}
+
+dialog[open]#vars-and-secrets-modal ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+dialog[open]#vars-and-secrets-modal ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .5rem;
+  gap: .5rem;
+}
+
+dialog[open]#vars-and-secrets-modal ul > li input {
+  flex: 1;
+  padding: 0.25rem;
+  font-size: 1rem;
+}
+
+.secret-toggle {
+  font-size: 1rem;
 }

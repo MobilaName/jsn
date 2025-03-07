@@ -12,6 +12,8 @@ import { ConsoleLogType, FileType, Executed } from './types.d';
 import Header from './layout/Header';
 import NoteEditor from './layout/Editor';
 import { removeExtension } from './utils/files';
+import { NewFileName } from './modals/NewFileName';
+import { VarsAndSecrets } from './modals/VarsAndSecrets';
 
 let executor = new ChunkedExecutor();
 
@@ -53,6 +55,8 @@ function App() {
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const [activeBlock, setActiveBlock] = useState(NaN);
   const [executed, setExecuted] = useState<Executed>({});
+  const [newFileNameModal, setNewFileNameModal] = useState(false);
+  const [varsAndSecretsModal, setVarsAndSecretsModal] = useState(false);
 
   useEffect(() => {
     if (dir) {
@@ -122,10 +126,67 @@ function App() {
     }
   }
 
+  const handleAddFile = async (fileName: string) => {
+    const fullFileName = fileName + '.js';
+    // @ts-expect-error
+    if (window.electronAPI && dir) {
+      // @ts-expect-error
+      const result = await window.electronAPI.createFile(dir, fileName);
+
+      setLoadingFile(true);
+      // @ts-expect-error
+      const fileContent = await window.electronAPI.openFile(dir, fullFileName);
+      setCode(new JavaScriptCode(fileContent).getArray());
+      setLoadingFile(false);
+      setCurrentFile(fullFileName);
+      executor = new ChunkedExecutor();
+
+      (async function(dir:string) {
+        // @ts-expect-error
+        const [_dir, fileList]:[string, FileType[]] = await window.electronAPI.openFolder(dir);
+        setDir(_dir);
+        setFiles(fileList);
+      })(dir);
+    } else {
+      throw new Error("Electron API not available");
+    }
+
+    setNewFileNameModal(false);
+  }
+
   const setRunBlockEvent = (event: KeyboardEvent<HTMLBodyElement>) => {
     if (event.ctrlKey && event.key === 'Enter') {
       document.getElementById(`run-btn-${activeBlock}`)?.click();
     }
+  }
+
+  const convertToText = (index: number) => {
+    const updatedCode = [...code];
+    updatedCode[index].type = 'comment';
+    setCode(updatedCode);
+  }
+
+  const convertToCode = (index: number) => {
+    const updatedCode = [...code];
+    updatedCode[index].type = 'code';
+    setCode(updatedCode);
+  }
+
+  const moveBlock = (dir: 'up' | 'down', index: number) => {
+    const updatedCode = [...code];
+    const temp = updatedCode.splice(index, 1)[0];
+    updatedCode.splice(index + (dir === 'up' ? -1 : 1), 0, temp);
+    setCode(updatedCode);
+  }
+
+  const addDirectionBlock = (dir: 'up' | 'down', index: number) => {
+    const updatedCode = [...code];
+    updatedCode.splice(index + (dir === 'up' ? 0 : 1), 0, {
+      content: '',
+      type: 'code',
+      uuid: crypto.randomUUID()
+    });
+    setCode(updatedCode);
   }
 
   const runAllBlocks = async () => {
@@ -193,6 +254,7 @@ function App() {
       executing={executing}
       handleSelectFolder={handleSelectFolder}
       handleSaveFile={handleSaveFile}
+      handleShowSecrets={() => setVarsAndSecretsModal(true)}
       runAllBlocks={runAllBlocks}
       addBlock={addBlock}
     />
@@ -223,7 +285,7 @@ function App() {
               }}
             />
           </div>
-          <button data-title="New File"><AiOutlineFileAdd /></button>
+          <button data-title="New File" onClick={() => setNewFileNameModal(true)}><AiOutlineFileAdd /></button>
         </div>
       )}
       
@@ -238,8 +300,25 @@ function App() {
         addBlock={addBlock}
         deleteBlock={deleteBlock}
         saveCodeToIndex={saveCodeToIndex}
+        convertToText={convertToText}
+        convertToCode={convertToCode}
+        moveBlock={moveBlock}
+        addDirectionBlock={addDirectionBlock}
       />}
     </div>
+    {newFileNameModal && (
+      <NewFileName
+        isVisible={newFileNameModal}
+        handleSave={handleAddFile}
+        handleCancel={() => setNewFileNameModal(false)}
+      />
+    )}
+    {varsAndSecretsModal && (
+      <VarsAndSecrets
+        isVisible={varsAndSecretsModal}
+        handleCancel={() => setVarsAndSecretsModal(false)}
+      />
+    )}
   </>
   )
 }

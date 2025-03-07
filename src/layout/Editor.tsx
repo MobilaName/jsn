@@ -23,7 +23,11 @@ const NoteEditor = ({
   executed,
   executing,
   saveCodeToIndex,
-  deleteBlock
+  deleteBlock,
+  convertToText,
+  convertToCode,
+  moveBlock,
+  addDirectionBlock
 }: {
   code: SplittedCode[],
   logs: ConsoleLogType[],
@@ -34,7 +38,11 @@ const NoteEditor = ({
   saveCodeToIndex: Function,
   runBlock: Function,
   executed: Executed,
-  executing: boolean
+  executing: boolean,
+  convertToText: Function,
+  convertToCode: Function,
+  moveBlock: Function,
+  addDirectionBlock: Function
 }) => {
   let codeIdx = 0;
   return (
@@ -83,27 +91,27 @@ const NoteEditor = ({
                     <button
                       disabled={executing}
                       data-title="Add Block Above"
-                      onClick={runBlock.bind(undefined, index, codeIdx)}
+                      onClick={addDirectionBlock.bind(undefined, 'up', index)}
                     >
                       <TbTableImport />
                     </button>
                     <button
                       data-title="Add Block Below"
-                      onClick={addBlock(index)}
                       disabled={executing}
+                      onClick={addDirectionBlock.bind(undefined, 'down', index)}
                     >
                       <TbTableDown />
                     </button>
                     <button
                       data-title="Move Block Up"
-                      onClick={runBlock.bind(undefined, index, codeIdx)}
+                      onClick={moveBlock.bind(undefined, 'up', index)}
                       disabled={executing}
                     >
                       <TbArrowAutofitUp />
                     </button>
                     <button
                       data-title="Move Block Down"
-                      onClick={runBlock.bind(undefined, index, codeIdx)}
+                      onClick={moveBlock.bind(undefined, 'down', index)}
                       disabled={executing}
                     >
                       <TbArrowAutofitDown />
@@ -112,7 +120,7 @@ const NoteEditor = ({
                   <div className='flex'>
                     <button
                       data-title="Convert to Text"
-                      onClick={deleteBlock.bind(undefined, index, codeIdx)}
+                      onClick={convertToText.bind(undefined, index)}
                       disabled={executing}
                     >
                       <AiTwotoneFileText />
@@ -155,23 +163,75 @@ const NoteEditor = ({
         <div
           key={item.uuid}
           onClick={() => setActiveBlock(index)}
-          className={`chunk-block${activeBlock === index ? ' chunk-block-active' : ''}`}
+          className={`md-editor chunk-block${activeBlock === index ? ' chunk-block-active' : ''}`}
         >
-          <MDXEditor
-            markdown={item.content}
-            className="comment"
-            contentEditableClassName="my-prose-class"
-            onChange={saveCodeToIndex(index)}
-            readOnly={executing}
-            plugins={[
-              // Example Plugin Usage
-              headingsPlugin(),
-              listsPlugin(),
-              quotePlugin(),
-              thematicBreakPlugin(),
-              markdownShortcutPlugin()
-            ]}
-          />
+          <div style={{flex:1}}>
+            <div className='md-actions'>
+              <div className='flex'>
+                <button
+                  disabled={executing}
+                  data-title="Add Block Above"
+                  onClick={addDirectionBlock.bind(undefined, 'up', index)}
+                >
+                  <TbTableImport />
+                </button>
+                <button
+                  data-title="Add Block Below"
+                  onClick={addDirectionBlock.bind(undefined, 'down', index)}
+                  disabled={executing}
+                >
+                  <TbTableDown />
+                </button>
+                <button
+                  data-title="Move Block Up"
+                  onClick={moveBlock.bind(undefined, 'up', index)}
+                  disabled={executing}
+                >
+                  <TbArrowAutofitUp />
+                </button>
+                <button
+                  data-title="Move Block Down"
+                  onClick={moveBlock.bind(undefined, 'down', index)}
+                  disabled={executing}
+                >
+                  <TbArrowAutofitDown />
+                </button>
+              </div>
+              <div className='flex'>
+                <button
+                  data-title="Convert to Code"
+                  onClick={convertToCode.bind(undefined, index)}
+                  disabled={executing}
+                >
+                  <AiTwotoneFileText />
+                  To Code
+                </button>
+                <button
+                  data-title="Delete Block"
+                  onClick={deleteBlock.bind(undefined, index, codeIdx)}
+                  disabled={executing}
+                  className='btn-delete'
+                >
+                  <AiTwotoneDelete />
+                </button>
+              </div>
+            </div>
+            <MDXEditor
+              markdown={item.content}
+              className="comment"
+              contentEditableClassName="my-prose-class"
+              onChange={saveCodeToIndex(index)}
+              readOnly={executing}
+              plugins={[
+                // Example Plugin Usage
+                headingsPlugin(),
+                listsPlugin(),
+                quotePlugin(),
+                thematicBreakPlugin(),
+                markdownShortcutPlugin()
+              ]}
+            />
+          </div>
         </div>
       )
     })}

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { AiTwotoneCode, AiTwotoneControl, AiTwotoneFolderOpen, AiTwotonePlayCircle, AiTwotonePropertySafety, AiTwotoneQuestionCircle, AiTwotoneSave } from 'react-icons/ai';
 import { TbArrowAutofitDown } from 'react-icons/tb';
-import { cmdOrCtrl } from '../utils/system';
+import { cmdOrCtrl, cmdOrCtrlIcon } from '../utils/system';
 
 interface HeaderProps {
   executing: boolean;
@@ -9,8 +9,9 @@ interface HeaderProps {
   runAllBlocks: () => void;
   addBlock: () => () => void;
   handleSaveFile: () => void;
+  handleShowSecrets: () => void;
 }
-const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleSaveFile }: HeaderProps) => {
+const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleSaveFile, handleShowSecrets }: HeaderProps) => {
 
   const handleKeyPress = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
@@ -45,15 +46,15 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleS
         JSNotes
       </div>
       <div className="header-buttons">
-        <button disabled={executing} onClick={handleSelectFolder} data-title="Open Folder (Shift + Ctrl + O)">
+        <button disabled={executing} onClick={handleSelectFolder} data-title={`Open Folder (${cmdOrCtrlIcon} + O)`}>
           <AiTwotoneFolderOpen />
         </button>
-        <button disabled={executing} onClick={handleSaveFile} data-title="Save (Shift + Ctrl + S)">
+        <button disabled={executing} onClick={handleSaveFile} data-title={`Save (${cmdOrCtrlIcon} + S)`}>
           <AiTwotoneSave />
         </button>
         <button
           disabled={executing}
-          data-title="Run (Shift + Ctrl + R)"
+          data-title={`Run (${cmdOrCtrlIcon} + R)`}
           onClick={runAllBlocks}
         >
           <AiTwotonePlayCircle />
@@ -62,14 +63,14 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleS
       <div className="header-buttons">
         <button
           disabled={executing}
-          data-title="Add Code Block (Shift + Ctrl + B)"
+          data-title={`Add Code Block (${cmdOrCtrlIcon} + B)`}
           onClick={addBlock()}
         >
           <TbArrowAutofitDown />
         </button>
       </div>
       <div className="header-buttons">
-        <button disabled={executing} data-title="Globals &amp; Secrets">
+        <button disabled={executing} data-title="Globals &amp; Secrets" onClick={handleShowSecrets}>
           <AiTwotonePropertySafety />
         </button>
         <button disabled={executing} data-title="Settings">

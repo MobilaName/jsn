@@ -56,3 +56,22 @@ export const wllama = async (modelUrl?: string) => {
 
   return wll;
 }
+
+export const agentChat = async (wll: Wllama, chat: any[]) => {
+  return wll.createCompletion(
+    chat.map(c=>`<|${c.role}|>${c.content}<|endoftext|>`).join('\n')
+    + '<|assistant|>', {
+      useCache: true,
+      // @ts-expect-error
+      nThreads: -1, // auto
+      nContext: 8192,
+      nPredict: 500,
+      nBatch: 128,
+      sampling: {
+        temp: 0.5,
+        top_k: 10,
+        top_p: 0.5,
+        penalty_repeat: 1,
+      },
+    });
+};

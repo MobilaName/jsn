@@ -49,3 +49,9 @@ export interface FileType {
   type: 'folder' | 'file';
   children?: FileType[];
 }
+
+export interface VarsAndSecretsType {
+  name: string;
+  value: string;
+  type: 'var' | 'secret';
+}

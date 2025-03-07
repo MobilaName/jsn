@@ -9,6 +9,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: false, // More secure
       contextIsolation: true,
@@ -16,6 +17,8 @@ function createWindow() {
       preload: path.join(app.getAppPath(), 'preload.js'), // Use preload for IPC
     },
   });
+
+  mainWindow.maximize();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     details.responseHeaders['Cross-Origin-Embedder-Policy'] = ['require-corp']
@@ -94,6 +97,17 @@ ipcMain.handle('open-file', async (_ev, folderPath, fileName) => {
   const fileData = fs.readFileSync(filePath, 'utf8');
   
   return fileData;
+});
+
+ipcMain.handle('create-file', async (_ev, folderPath, fileName) => {
+  const filePath = path.join(folderPath, `${fileName}.js`);
+
+  if (fs.existsSync(filePath)) {
+    return false;
+  }
+  
+  fs.writeFileSync(filePath, `/* # ${fileName} */`);
+  return true;
 });
 
 ipcMain.handle('save-file', async (_ev, folderPath, fileName, fileData) => {
