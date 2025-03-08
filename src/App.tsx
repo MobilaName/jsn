@@ -78,17 +78,12 @@ function App() {
         })(currentFile);
       }
     }
-  
-  }, []);
 
-  useEffect(() => {
-    const handleOpenNotebook =() => {
-      console.log(222)
-      // handleSelectFolder();
+    if (!loadingFile) {
+      // @ts-expect-error
+      window.electronAPI?.onOpenNotebook(handleSelectFolder);
     }
-
-    // @ts-expect-error
-    window.electronAPI?.onOpenNotebook(handleOpenNotebook);
+  
   }, []);
 
   useEffect(() => {

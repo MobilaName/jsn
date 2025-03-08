@@ -60,7 +60,7 @@ function createWindow() {
     {
       label: 'File',
       submenu: [
-        {role: 'openfolder', label: 'Open Notebook', click: () => {mainWindow.webContents.send('open-notebook')}},
+        {label: 'Open Notebook', click: () => mainWindow.webContents.send('open-notebook')},
         {type: 'separator'},
         {role: 'recentdocuments', label: 'Recent Notebooks', click: () => {console.log('Recent Notebooks')}},
       ]
@@ -141,7 +141,7 @@ function createWindow() {
   ];
 
   const menu = Menu.buildFromTemplate(template)
-  app.applicationMenu = menu
+  Menu.setApplicationMenu(menu)
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     details.responseHeaders['Cross-Origin-Embedder-Policy'] = ['require-corp']
