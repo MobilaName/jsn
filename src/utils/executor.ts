@@ -1,5 +1,5 @@
 import { consoleEvents, CodeChunk, ConsoleEvent, ExecutionContext, LogArgsType, ConsoleLogType, VarsAndSecretsType } from "../types.d";
-import { agentChat, delay, wllama } from "./utilityFunctions";
+import { agentChat, delay, pgLite, wllama } from "./utilityFunctions";
 
 export interface ExecutorConstructor {
   new(): Executor;
@@ -32,6 +32,7 @@ export class ChunkedExecutor implements Executor {
       ai: wllama,
       delay,
       aiChat: agentChat,
+      pgLite,
     };
 
     ['document', 'location'].forEach((key:string) => this.context[key] = `undefined`);

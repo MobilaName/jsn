@@ -194,7 +194,7 @@ const NoteEditor = ({
                   readOnly={executing}
                   style={{
                     fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 14,
+                    fontSize: '.9rem',
                     lineHeight: '1.5rem'
                   }}
                 />
@@ -267,7 +267,7 @@ const NoteEditor = ({
               </div>
             </div>
             <MDXEditor
-              markdown={item.content}
+              markdown={item.content?.trim()}
               className="comment"
               contentEditableClassName="my-prose-class"
               onChange={saveCodeToIndex(index)}

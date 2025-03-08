@@ -28,6 +28,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.2.17",
     "@mdxeditor/editor": "^3.21.3",
     "@mlc-ai/web-llm": "^0.2.78",
     "@wllama/wllama": "^2.2.0",

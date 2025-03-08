@@ -1,5 +1,6 @@
 // import { CreateMLCEngine, MLCEngine } from "@mlc-ai/web-llm";
 import { Wllama } from '@wllama/wllama';
+import { PGlite, IdbFs } from '@electric-sql/pglite'
 
 // // @ts-expect-error
 // window.CreateMLCEngine = CreateMLCEngine;
@@ -74,4 +75,17 @@ export const agentChat = async (wll: Wllama, chat: any[]) => {
         penalty_repeat: 1,
       },
     });
+};
+
+export const pgLite = (dbName: string) => {
+  let db;
+  try {
+    db = new PGlite({
+      fs: new IdbFs(dbName),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
+  return db;
 };
