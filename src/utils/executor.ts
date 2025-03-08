@@ -1,5 +1,6 @@
 import { consoleEvents, CodeChunk, ConsoleEvent, ExecutionContext, LogArgsType, ConsoleLogType, VarsAndSecretsType } from "../types.d";
 import { agentChat, delay, pgLite, wllama } from "./utilityFunctions";
+import { types } from '@electric-sql/pglite'
 
 export interface ExecutorConstructor {
   new(): Executor;
@@ -33,6 +34,7 @@ export class ChunkedExecutor implements Executor {
       delay,
       aiChat: agentChat,
       pgLite,
+      types,
     };
 
     ['document', 'location'].forEach((key:string) => this.context[key] = `undefined`);

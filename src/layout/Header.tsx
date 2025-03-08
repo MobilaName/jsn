@@ -46,7 +46,7 @@ const Header = ({ executing, handleSelectFolder, runAllBlocks, addBlock, handleS
         JSNotes
       </div>
       <div className="header-buttons">
-        <button disabled={executing} onClick={handleSelectFolder} data-title={`Open Folder (${cmdOrCtrlIcon} + O)`}>
+        <button disabled={executing} onClick={handleSelectFolder} data-title={`Open Notebook (${cmdOrCtrlIcon} + O)`}>
           <AiTwotoneFolderOpen />
         </button>
         <button disabled={executing} onClick={handleSaveFile} data-title={`Save (${cmdOrCtrlIcon} + S)`}>

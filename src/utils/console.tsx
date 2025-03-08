@@ -1,4 +1,5 @@
-import { jsonToTableHtml } from "./jsonToTable";
+// @ts-expect-error
+import { jsonToTableHtmlString } from 'json-table-converter'
 import {
   ArcElement,
   Chart as ChartJS,
@@ -40,8 +41,12 @@ export function consoleToDivs (consoleLogs: ConsoleLogType[]): JSX.Element[] {
       
     }
 
-    if (type === ConsoleEvent.Table)
-      return <div key={itemKey} className="table-wrapper" dangerouslySetInnerHTML={{__html: jsonToTableHtml(args)}} />;
+    if (type === ConsoleEvent.Table) {
+      // return <div key={itemKey} className="table-wrapper">
+      //   <JtR data={args} />
+      // </div>jsonToTableHtmlString
+      return <div key={itemKey} className="table-wrapper" dangerouslySetInnerHTML={{__html: jsonToTableHtmlString(args)}} />;
+    }
 
     if (type === ConsoleEvent.Chart) {
       const Charts = {

@@ -1,6 +1,7 @@
 // import { CreateMLCEngine, MLCEngine } from "@mlc-ai/web-llm";
 import { Wllama } from '@wllama/wllama';
 import { PGlite, IdbFs } from '@electric-sql/pglite'
+import { vector } from '@electric-sql/pglite/vector'
 
 // // @ts-expect-error
 // window.CreateMLCEngine = CreateMLCEngine;
@@ -82,6 +83,7 @@ export const pgLite = (dbName: string) => {
   try {
     db = new PGlite({
       fs: new IdbFs(dbName),
+      extensions: { vector },
     });
   } catch (error) {
     console.error(error);

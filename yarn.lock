@@ -4158,6 +4158,11 @@ json-stringify-safe@^5.0.1:
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==
 
+json-table-converter@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/json-table-converter/-/json-table-converter-0.3.0.tgz#4b7cf74e7074f1e048dc3f0eed536aeedae79126"
+  integrity sha512-wdt3+uB9t9qqA7KX/04GgtNkMh/YMK3t4wHPQjTxHKuS2t3jiyDdhXh/vitBoBgN63N/AjoDAe4M/IaJRbxOtQ==
+
 json5@^2.2.3:
   version "2.2.3"
   resolved "https://registry.npmjs.org/json5/-/json5-2.2.3.tgz"

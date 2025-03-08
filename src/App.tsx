@@ -78,6 +78,17 @@ function App() {
         })(currentFile);
       }
     }
+  
+  }, []);
+
+  useEffect(() => {
+    const handleOpenNotebook =() => {
+      console.log(222)
+      // handleSelectFolder();
+    }
+
+    // @ts-expect-error
+    window.electronAPI?.onOpenNotebook(handleOpenNotebook);
   }, []);
 
   useEffect(() => {

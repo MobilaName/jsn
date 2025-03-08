@@ -1,9 +1,12 @@
-import { app, BrowserWindow, dialog, ipcMain, session } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, session, Menu } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import isDev from 'electron-is-dev';
 
 let mainWindow;
+
+const isMac = process.platform === 'darwin'
+
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -14,6 +17,7 @@ function createWindow() {
     titleBarStyle: 'hidden',
     frame: false,
     toolbar: false,
+    ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
     webPreferences: {
       nodeIntegration: false, // More secure
       contextIsolation: true,
@@ -27,6 +31,117 @@ function createWindow() {
   if (process.platform === 'darwin') {
     app.dock.setIcon(path.join('./public/icon.png'));
   }
+
+  if (process.platform === 'win32') {
+    app.setUserTasks([
+      
+    ])
+  }
+
+  app.setName('JSNotes')
+
+  const template = [
+    // { role: 'appMenu' }
+    ...(isMac
+      ? [{
+          label: 'JSNotes',
+          submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideOthers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
+          ]
+        }]
+      : []),
+    // { role: 'fileMenu' }
+    {
+      label: 'File',
+      submenu: [
+        {role: 'openfolder', label: 'Open Notebook', click: () => {mainWindow.webContents.send('open-notebook')}},
+        {type: 'separator'},
+        {role: 'recentdocuments', label: 'Recent Notebooks', click: () => {console.log('Recent Notebooks')}},
+      ]
+    },
+    // { role: 'editMenu' }
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        ...(isMac
+          ? [
+              { role: 'delete' },
+              { role: 'selectAll' },
+              { type: 'separator' },
+              {
+                label: 'Speech',
+                submenu: [
+                  { role: 'startSpeaking' },
+                  { role: 'stopSpeaking' }
+                ]
+              }
+            ]
+          : [
+              { role: 'delete' },
+              { type: 'separator' },
+              { role: 'selectAll' }
+            ])
+      ]
+    },
+    // { role: 'viewMenu' }
+    {
+      label: 'View',
+      submenu: [
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'resetZoom' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    // { role: 'windowMenu' }
+    {
+      label: 'Window',
+      submenu: [
+        { role: 'minimize' },
+        { role: 'zoom' },
+        ...(isMac
+          ? [
+              { type: 'separator' },
+              { role: 'front' },
+              { type: 'separator' },
+              { role: 'window' }
+            ]
+          : [
+              { role: 'close' }
+            ])
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: '? Help',
+          click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://electronjs.org')
+          }
+        }
+      ]
+    }
+  ];
+
+  const menu = Menu.buildFromTemplate(template)
+  app.applicationMenu = menu
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     details.responseHeaders['Cross-Origin-Embedder-Policy'] = ['require-corp']
@@ -43,8 +158,7 @@ function createWindow() {
   mainWindow.on('closed', () => (mainWindow = null));
 }
 
-// Handle folder selection and return file list
-ipcMain.handle('select-folder', async () => {
+const selectFolder = async () => {
   const result = await dialog.showOpenDialog({
     properties: ['openDirectory'], // Only allow folder selection
   });
@@ -74,9 +188,12 @@ ipcMain.handle('select-folder', async () => {
 
   const filesAndFolders = traverseFolder(folderPath);
   return [folderPath, filesAndFolders];
-});
+}
 
-ipcMain.handle('open-folder', async (_ev, folderPath) => {
+// Handle folder selection and return file list
+ipcMain.handle('select-folder', selectFolder);
+
+const openFolder = async (_ev, folderPath) => {
   function traverseFolder(folderPath) {
     const files = fs.readdirSync(folderPath);
     return files.map((file) => {
@@ -87,18 +204,16 @@ ipcMain.handle('open-folder', async (_ev, folderPath) => {
         name: file,
         type: isFolder ? 'folder' : 'file',
       };
-
-      // if (isFolder) {
-      //   // If folder, traverse it and add children
-      //   _file.children = traverseFolder(filePath);
-      // }
       return _file;
     }).filter(f => f.name.endsWith('.js') && f.type === 'file');
   }
 
   const filesAndFolders = traverseFolder(folderPath);
+  app.addRecentDocument(folderPath);
   return [folderPath, filesAndFolders];
-});
+}
+
+ipcMain.handle('open-folder', openFolder);
 
 ipcMain.handle('open-file', async (_ev, folderPath, fileName) => {
   const filePath = path.join(folderPath, fileName);
@@ -129,7 +244,9 @@ ipcMain.handle('save-file', async (_ev, folderPath, fileName, fileData) => {
   }
 });
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+});
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
