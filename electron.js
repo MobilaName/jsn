@@ -1,12 +1,14 @@
-import { app, BrowserWindow, dialog, ipcMain, session, Menu } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, session, Menu, shell } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import isDev from 'electron-is-dev';
+import axios from 'axios';
 
 let mainWindow;
 
 const isMac = process.platform === 'darwin'
 
+app.setName('JSNotes')
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -38,13 +40,12 @@ function createWindow() {
     ])
   }
 
-  app.setName('JSNotes')
-
   const template = [
     // { role: 'appMenu' }
     ...(isMac
       ? [{
           label: 'JSNotes',
+          click: () => {},
           submenu: [
             { role: 'about' },
             { type: 'separator' },
@@ -132,7 +133,6 @@ function createWindow() {
         {
           label: '? Help',
           click: async () => {
-            const { shell } = require('electron')
             await shell.openExternal('https://electronjs.org')
           }
         }
@@ -220,6 +220,16 @@ ipcMain.handle('open-file', async (_ev, folderPath, fileName) => {
   const fileData = fs.readFileSync(filePath, 'utf8');
   
   return fileData;
+});
+
+
+ipcMain.handle('fetch-request', async (_ev, req) => {
+  const {status, headers, data} = await axios(req);
+  return {
+    status,
+    headers,
+    data
+  };
 });
 
 ipcMain.handle('create-file', async (_ev, folderPath, fileName) => {

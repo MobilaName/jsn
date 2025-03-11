@@ -251,34 +251,37 @@ function App() {
     />
     <div className="container">
       
-      {files.length > 0 && (
-        <div className='files-list-select'>
-          <label htmlFor="fileslist">Notes:</label>
-          <div>
-            <Select
-              options={files.map((file:FileType) => ({label: removeExtension(file.name), value: file.name}))}
-              placeholder="Select a Note"
-              value={{label: removeExtension(currentFile), value: currentFile}}
-              onChange={(file) => {
-                setLoadingFile(true);
-                setTimeout(async () => {
-                  // @ts-expect-error
-                  const fileContent = await window.electronAPI.openFile(dir, file?.value);
-                  setCurrentFile(file?.value || '');
-                  setCode(new JavaScriptCode(fileContent).getArray());
-                  setLogs([]);
-                  setCurrentChunk(NaN);
-                  setExecuted({});
-                  setExecuting(false);
-                  setLoadingFile(false);
-                  executor = new ChunkedExecutor();
-                }, 0);
-              }}
-            />
-          </div>
-          <button data-title="New Note" onClick={() => setNewFileNameModal(true)} style={{fontSize: '1.5rem'}}><AiOutlineFileAdd /></button>
+      
+      <div className='files-list-select'>
+        <label htmlFor="fileslist">Notes:</label>
+        <div>
+        {files?.length ? (
+          <Select
+            options={files.map((file:FileType) => ({label: removeExtension(file.name), value: file.name}))}
+            placeholder="Select a Note"
+            value={{label: removeExtension(currentFile), value: currentFile}}
+            onChange={(file) => {
+              setLoadingFile(true);
+              setTimeout(async () => {
+                // @ts-expect-error
+                const fileContent = await window.electronAPI.openFile(dir, file?.value);
+                setCurrentFile(file?.value || '');
+                setCode(new JavaScriptCode(fileContent).getArray());
+                setLogs([]);
+                setCurrentChunk(NaN);
+                setExecuted({});
+                setExecuting(false);
+                setLoadingFile(false);
+                executor = new ChunkedExecutor();
+              }, 0);
+            }}
+          />
+        ) : (
+          <strong>No notes found</strong>
+        )}
         </div>
-      )}
+        <button data-title="New Note" onClick={() => setNewFileNameModal(true)} style={{fontSize: '1.5rem'}}><AiOutlineFileAdd /></button>
+      </div>
       
       {loadingFile ? <h1>Loading file...</h1> : <NoteEditor
         code={code}

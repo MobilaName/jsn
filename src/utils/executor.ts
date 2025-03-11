@@ -52,6 +52,8 @@ export class ChunkedExecutor implements Executor {
       ));
       this.context['vars'] = {};
       this.context['secrets'] = {};
+      // @ts-expect-error
+      this.context.axios = window.electronAPI?.fetchRequest;
 
       formattedVars.forEach((varAndSecret:VarsAndSecretsType) => {
         this.context[varAndSecret.type + 's'][varAndSecret.name] = varAndSecret.value;

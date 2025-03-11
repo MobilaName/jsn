@@ -17,6 +17,7 @@ export const delay = (ms:number) => new Promise((resolve) => setTimeout(resolve,
 
 const progressCallback =  ({ loaded, total } : { loaded: number; total: number }) => {
   const progressPercentage = Math.round((loaded / total) * 100);
+  console.clear();
   console.info(`Downloading... ${progressPercentage}%`);
 };
 

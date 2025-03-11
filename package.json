@@ -1,5 +1,6 @@
 {
-  "name": "app",
+  "name": "jsnotes",
+  "productName": "JSNotes",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -32,6 +33,7 @@
     "@mdxeditor/editor": "^3.21.3",
     "@mlc-ai/web-llm": "^0.2.78",
     "@wllama/wllama": "^2.2.0",
+    "axios": "^1.8.2",
     "chart.js": "^4.4.7",
     "chartist": "^1.3.0",
     "electron": "^34.2.0",
