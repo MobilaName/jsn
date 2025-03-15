@@ -24,7 +24,8 @@
   "scripts": {
     "dev": "vite",
     "electron:dev": "electron .",
-    "build": "vite build && electron-builder",
+    "build": "vite build",
+    "electron:build": "electron-builder",
     "lint": "eslint .",
     "preview": "vite preview"
   },

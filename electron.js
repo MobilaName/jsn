@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, session, Menu, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, session, Menu, shell, protocol } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import isDev from 'electron-is-dev';
@@ -30,9 +30,9 @@ function createWindow() {
 
   mainWindow.maximize();
 
-  if (process.platform === 'darwin') {
-    app.dock.setIcon(path.join('./public/icon.png'));
-  }
+  // if (process.platform === 'darwin') {
+  //   app.dock.setIcon(path.join('./public/icon.png'));
+  // }
 
   if (process.platform === 'win32') {
     app.setUserTasks([

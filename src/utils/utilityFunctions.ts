@@ -9,8 +9,8 @@ import { vector } from '@electric-sql/pglite/vector'
 // window.MLCEngine = MLCEngine;
 
 const CONFIG_PATHS = {
-  'single-thread/wllama.wasm': '/esm/single-thread/wllama.wasm',
-  'multi-thread/wllama.wasm' : '/esm/multi-thread/wllama.wasm',
+  'single-thread/wllama.wasm': './esm/single-thread/wllama.wasm',
+  'multi-thread/wllama.wasm' : './esm/multi-thread/wllama.wasm',
 };
 
 export const delay = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -84,7 +84,7 @@ export const pgLite = (dbName: string) => {
   try {
     db = new PGlite({
       fs: new IdbFs(dbName),
-      extensions: { vector },
+      // extensions: { vector },
     });
   } catch (error) {
     console.error(error);
