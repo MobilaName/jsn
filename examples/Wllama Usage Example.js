@@ -6,11 +6,7 @@
 Ссылка: <u>https://github.com/ngxson/wllama</u>              */
 
 
-/*      ## Установка
-
-`yarn add @wllama/wllama`
-
-## Вызываем модель
+/* ## Вызываем модель
 
 Можно передать ссылку на **.gguf**-файл с *Hugginface*      */
 
