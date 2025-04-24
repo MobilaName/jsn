@@ -22,6 +22,7 @@
     }
   },
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "dev": "vite",
     "electron:dev": "electron .",
     "build": "vite build",
@@ -33,6 +34,7 @@
     "@electric-sql/pglite": "^0.2.17",
     "@mdxeditor/editor": "^3.21.3",
     "@mlc-ai/web-llm": "^0.2.78",
+    "@uidotdev/usehooks": "^2.4.1",
     "@wllama/wllama": "^2.2.0",
     "axios": "^1.8.2",
     "chart.js": "^4.4.7",
